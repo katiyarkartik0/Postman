@@ -5,7 +5,7 @@ const historySchema = mongoose.Schema(
     request: { type: String, required: true },
     route: { type: String, required: true },
     body: { type: String },
-    headers:{type:String},
+    headers:{type:Object},
   },
   { timestaps: true }
 );

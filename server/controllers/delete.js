@@ -1,6 +1,17 @@
+const History = require("../models/history");
+
 const deleteRequest = async (req, res) => {
     const { route, headers, body } = req.body
     try {
+        const newHistory = new History({
+            request:"DELETE",
+            route,
+            body,
+            headers
+          });
+        
+        await newHistory.save();
+
         const response = await fetch(`${route}`, {
             method: "DELETE",
             headers: headers,
@@ -17,6 +28,7 @@ const deleteRequest = async (req, res) => {
         else {
             result = await response.json();
         }
+       
         return res.status(200).json({ response: result, status, responseHeaders, isResponseText });
     } catch (error) {
         console.log(error)

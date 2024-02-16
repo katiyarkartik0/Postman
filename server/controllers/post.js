@@ -1,6 +1,16 @@
+const History = require("../models/history");
+
 const postRequest = async (req, res) => {
     const { route, headers, body } = req.body
     try {
+        const newHistory = new History({
+            request:"POST",
+            route,
+            body,
+            headers
+          });
+        
+        await newHistory.save();
 
         const response = await fetch(`${route}`, {
             method: "POST",

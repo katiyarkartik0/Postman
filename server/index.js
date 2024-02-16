@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const { requestRoutes } = require("./routes/request");
+const { historyRoutes } = require("./routes/history");
 
 const routes = express.Router();
 
@@ -18,15 +19,17 @@ app.get("/", (req, res) => {
   res.status(200).send("Welcome");
 });
 
-app.use("/api/request",requestRoutes)
+app.use("/api/request", requestRoutes)
+app.use("/api/history", historyRoutes)
 
-// mongoose
-//   .connect(process.env.MONGO_URL, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   })
-//   .then(() => {
+
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
     console.log("App has started")
-    app.listen(3001)
-  // }
-    // );
+    app.listen(process.env.PORT)
+  }
+  );

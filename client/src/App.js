@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { deleteRoute, getRoute, postRoute, putRoute } from './api/request';
-import JsonViewer from './JsonViewer';
-import TextViewer from './TextViewer';
+import JsonViewer from './Components/JsonViewer';
+import TextViewer from './Components/TextViewer';
+import { getHistory } from './api/history';
+import History from './Components/History';
 
 function sanitizeRequestBody(input) {
   if (!input) {
@@ -29,7 +31,22 @@ const App = () => {
   const [requestBody, setRequestBody] = useState('');
   const [headers, setHeaders] = useState([{ key: '', value: '' }]);
   const [responseData, setresponseData] = useState({ responseType: "JSON", response: {} });
-  const [isLoading,setIsLoading] = useState(false)
+  const [history, setHistory] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
+
+  useEffect(() => {
+    const fetchistory = async () => {
+      const resp = await getHistory();
+      const { history } = await resp.json();
+      setHistory(history);
+    }
+
+    fetchistory()
+
+  }, [responseData])
+
+
   const handleAddHeader = () => {
     setHeaders([...headers, { key: '', value: '' }]);
   };
@@ -162,9 +179,10 @@ const App = () => {
           Send Request
         </button>
       </form>
-      <p>{isLoading?"Loading...":<></>}</p>
+      <p>{isLoading ? "Loading..." : <></>}</p>
       <p>{responseData.responseType}</p>
-      {responseData.responseType === "JSON" ? <JsonViewer jsonData={responseData.response} status={responseData.status}/> : <TextViewer textData={responseData.response} status={responseData.status}/>}
+      {responseData.responseType === "JSON" ? <JsonViewer jsonData={responseData.response} status={responseData.status} /> : <TextViewer textData={responseData.response} status={responseData.status} />}
+      <History history={history} />
     </div>
   );
 };

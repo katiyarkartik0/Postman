@@ -1,6 +1,15 @@
+const History = require("../models/history");
+
 const getRequest = async (req, res) => {
     const { route, headers } = req.body
     try {
+        const newHistory = new History({
+            request:"GET",
+            route,
+            headers
+          });
+        
+        await newHistory.save();
 
         const response = await fetch(`${route}`, {
             method: "GET",
