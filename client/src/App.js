@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { deleteRoute, getRoute } from './api/request';
+import { deleteRoute, getRoute, postRoute, putRoute } from './api/request';
 import JsonViewer from './JsonViewer';
 import TextViewer from './TextViewer';
 
@@ -71,18 +71,25 @@ const App = () => {
       else if (method === "GET") {
         response = await getRoute({ requestData });
       }
+      else if (method === "POST") {
+        response = await postRoute({ requestData });
+      }
+      else if (method === "PUT") {
+        response = await putRoute({ requestData });
+      }
 
-      const { response: resp, isResponseText } = await response.json();
+      const { response: resp, isResponseText, status } = await response.json();
       if (!isResponseText) {
-        setresponseData(() => ({ responseType: "JSON", response: resp }))
+        setresponseData(() => ({ responseType: "JSON", response: resp, status }))
       }
       else {
-        setresponseData(() => ({ responseType: "TEXT", response: resp }))
+        setresponseData(() => ({ responseType: "TEXT", response: resp, status }))
       }
       setIsLoading(false)
     }
     catch (error) {
-
+      console.log(error)
+      alert(error)
     }
   };
 
@@ -157,7 +164,7 @@ const App = () => {
       </form>
       <p>{isLoading?"Loading...":<></>}</p>
       <p>{responseData.responseType}</p>
-      {responseData.responseType === "JSON" ? <JsonViewer jsonData={responseData.response} /> : <TextViewer textData={responseData.response} />}
+      {responseData.responseType === "JSON" ? <JsonViewer jsonData={responseData.response} status={responseData.status}/> : <TextViewer textData={responseData.response} status={responseData.status}/>}
     </div>
   );
 };

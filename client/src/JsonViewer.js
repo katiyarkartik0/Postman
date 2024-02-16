@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const JsonViewer = ({ jsonData }) => {
+const JsonViewer = ({ jsonData,status }) => {
     const [openNodes, setOpenNodes] = useState({});
     const handleToggle = (key) => {
         setOpenNodes({
@@ -37,6 +37,7 @@ const JsonViewer = ({ jsonData }) => {
 
     return (
         <div className="container mx-auto p-4">
+                        <p>{status?status:<></>}</p>
             <div className="mt-4">
                 {jsonData && (
                     <div className="border border-gray-300 rounded p-4">
